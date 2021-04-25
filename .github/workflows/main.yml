@@ -33,12 +33,23 @@ jobs:
       - name: Show variables
         run: echo "Version = ${{ steps.get_version.outputs.VERSION }}"
 
-      - name: Run Buildx
+      - name: Run Buildx amd64
         run: |
           docker buildx build \
-            --platform linux/amd64,linux/arm64 \
+            --platform linux/amd64 \
             --no-cache=true \
             -t "kgustafs/chia:latest" \
             -t "kgustafs/chia:${{ steps.get_version.outputs.VERSION }}" \
             -f Dockerfile \
             --push .
+
+      - name: Run Buildx arm64
+        run: |
+          docker buildx build \
+            --platform linux/arm64 \
+            --no-cache=true \
+            -t "kgustafs/chia:latest" \
+            -t "kgustafs/chia:${{ steps.get_version.outputs.VERSION }}" \
+            -f Dockerfile \
+            --push .
+
