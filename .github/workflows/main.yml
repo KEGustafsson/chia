@@ -38,7 +38,7 @@ jobs:
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
             --no-cache=true \
-            -t "kgustafs/chia:latest-load" \
+            -t "kgustafs/chia:latest" \
             -t "kgustafs/chia:${{ steps.get_version.outputs.VERSION }}" \
             -f Dockerfile \
             --push .
