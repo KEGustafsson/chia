@@ -20,6 +20,7 @@ RUN git clone https://github.com/Chia-Network/chia-blockchain.git -b latest --re
 WORKDIR /home/chia/chia-blockchain
 
 RUN . ./activate \
+&& chia init \
 && chmod +x install-gui.sh \
 && /usr/bin/sh ./install-gui.sh
 
