@@ -1,0 +1,44 @@
+name: buildx
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker/setup-qemu-action@v1
+      - uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+        
+      - name: Set variables
+        id: get_version
+        run: echo ::set-output name=VERSION::$(cat VERSION)
+      
+      - name: Show variables
+        run: echo "Version = ${{ steps.get_version.outputs.VERSION }}"
+
+      - name: Run Buildx
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm/v7,linux/arm64 \
+            --no-cache=true \
+            -t "kgustafs/chia:latest-load" \
+            -t "kgustafs/chia:${{ steps.get_version.outputs.VERSION }}" \
+            -f Dockerfile \
+            --push .

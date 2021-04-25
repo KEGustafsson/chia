@@ -1,0 +1,17 @@
+version: "2.2"
+
+services:
+  chia:
+    build: .
+    image: kgustafs/chia:latest
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - "DISPLAY"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    privileged: true
+    entrypoint: sh entrypoint.sh
+    logging:
+      options:
+        max-size: 10m
